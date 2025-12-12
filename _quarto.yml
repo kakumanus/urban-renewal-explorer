@@ -14,7 +14,9 @@ website:
     left:
       - text: "Technical Report"
         href: report.qmd
-      - text: "Exploratory Analysis"
+      - text: "Interactive Component"
+        href: interactive.ipynb
+      - text: "Exploratory Code"
         menu:
           - text: "Aerial Imagery"
             href: exploratory-analysis/historical-aerial-imagery.ipynb
