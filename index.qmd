@@ -1,0 +1,11 @@
+---
+title: "Welcome"
+subtitle: "Analyzing the impacts of Urban Renewal on connectivity and socioeconomic indicators in Cincinnati, Ohio. Showing barriers to revitalization."
+author: "Sujanesh Kakumanu"
+date: December 12 2025
+format:
+  html:
+    code-fold: true
+jupyter: geospatial
+---
+

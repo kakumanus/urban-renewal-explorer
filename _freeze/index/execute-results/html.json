@@ -1,0 +1,12 @@
+{
+  "hash": "32ec3898ea74dab3a55f4b6a3cd224c9",
+  "result": {
+    "engine": "jupyter",
+    "markdown": "---\ntitle: \"Ohio Urban Renewal Explorer - Home\"\nsubtitle: \"Analyzing the impacts of Urban Renewal on connectivity and socioeconomic indicators in Cincinnati, Ohio. Showing barriers to revitalization.\"\nauthor: \"Sujanesh Kakumanu\"\ndate: December 12 2025\nformat:\n  html:\n    code-fold: true\njupyter: geospatial\n---\n\n",
+    "supporting": [
+      "index_files/figure-html"
+    ],
+    "filters": [],
+    "includes": {}
+  }
+}

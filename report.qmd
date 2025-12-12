@@ -1,0 +1,66 @@
+---
+title: "Ohio Urban Renewal Explorer - Technical Report"
+subtitle: "Analyzing the impacts of Urban Renewal on connectivity and socioeconomic indicators in Cincinnati, Ohio. Showing barriers to revitalization."
+author: "Sujanesh Kakumanu"
+date: December 12 2025
+format:
+  html:
+    code-fold: true
+jupyter: geospatial
+---
+
+Next Steps in Priority Order:
+1. Complete the Network Analysis (satisfies OSMnx requirement)
+
+Download current Cincinnati street network using OSMnx for your study area
+Calculate network metrics for BOTH networks:
+
+Betweenness centrality
+Closeness centrality
+Network density
+Average street segment length
+
+
+Identify which "missing streets" were most critical to connectivity
+Calculate how much longer trips are now between key points
+
+2. Add Census Data Analysis (satisfies 3+ data sources + clustering)
+
+Pull 1940/1950 census data for your area (NHGIS is great for this)
+Pull current census data (use census API - satisfies API requirement!)
+Identify those "mirror neighborhoods" you mentioned
+Use scikit-learn clustering (k-means or DBSCAN) to find neighborhoods with similar characteristics to what was lost
+Compare socioeconomic indicators between destroyed areas and surviving "mirror" neighborhoods
+
+3. Create Interactive Visualizations
+
+Folium map with layers toggle: historical aerial, Sanborn overlay, missing streets, current streets
+Before/after network comparison
+Census data choropleth maps showing the "mirror neighborhoods"
+
+# Introduction
+A lot of dense urban neighborhoods in the United States were decimated by policies of Urban Renewal in the 1950s and 60s. These initiatives often involved constructing expanded roads, interstate highways, and other public works, but caused immense displacement of existing communities.
+
+Prominent examples in cities such as Boston, New York City, and Pittsburgh have been widely studied and critiqued in works like Root Shock by Mindy Thompson-Fullilove and The Death and Life of Great American Cities by Jane Jacobs. In this report, I turn attention to a lesser-known case: the West End of Cincinnati, Ohio, exploring how similar policies impacted its urban fabric and communities.
+
+I focus on three primary data sources: aerial imagery from the Ohio Department of Transportation (ODOT), Sanborn Fire Insurance Maps from the 1920s and 1930s, and historical Census records. Using these sources and tools from Python, including OSMnx, I illustrate the loss of street connectivity, analyze socioeconomic trends, and highlight persistent barriers to revitalization in the West End.
+
+# Methodology
+
+## Data Sources
+
+### ODOT Historical Aerial Imagery
+
+### Sandborn Maps
+
+### Longitudinal Tract Data Base
+
+## Python Libraries Used
+
+# Data Processing Flow
+
+# Results
+
+# Conclusion
+
+## Future Steps
