@@ -18,10 +18,10 @@ website:
         href: visuals.qmd
       - text: "Exploratory Code"
         menu:
-          - text: "Aerial Imagery"
-            href: exploratory-analysis/historical-aerial-imagery.ipynb
           - text: "Historical Census Data"
             href: exploratory-analysis/census-data.ipynb
+          - text: "Aerial Imagery"
+            href: exploratory-analysis/historical-aerial-imagery.ipynb
           - text: "OSMnx of Streets"
             href: exploratory-analysis/osmnx-exploration.ipynb
     

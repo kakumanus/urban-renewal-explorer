@@ -19,12 +19,12 @@ The project report detailing methodology, results, and conclusions. This include
 Look here if you are only interested in generated figures and html.
 
 ### Exploratory Analysis
-The raw processing code is organized into these sub-pages. For example, "Historical Aerial Imagery" contains the Python code that was used process aerial imagery, and into an HTML Folium component.
+The Python processing code is organized into these sub-pages. For example, "Historical Aerial Imagery" contains the Python code that was used process aerial imagery, and into an HTML Folium component.
 
-- [**Historical Aerial Imagery**](exploratory-analysis/historical-aerial-imagery.ipynb)
-  - **Libraries Used**: Rasterio, Folium, PIL, Pyproj
 - [**Historical Census Data**](exploratory-analysis/census-data.ipynb)
   - **Libraries Used**: Pygris, Cenpy, Pygris, Matplotlib, Geopandas, Pandas, Folium, Branca
+- [**Historical Aerial Imagery**](exploratory-analysis/historical-aerial-imagery.ipynb)
+  - **Libraries Used**: Rasterio, Folium, PIL, Pyproj
 - [**Street Network Analysis**](exploratory-analysis/osmnx-exploration.ipynb)
   - **Libraries Used**: 
 

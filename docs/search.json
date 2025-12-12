@@ -102,7 +102,7 @@
     "href": "index.html#navigate-the-project-website",
     "title": "Welcome",
     "section": "Navigate The Project Website",
-    "text": "Navigate The Project Website\n\nTechnical Report\nThe project report detailing methodology, results, and conclusions. This includes generated images and html.\n\n\nVisual Components\nLook here if you are only interested in generated figures and html.\n\n\nExploratory Analysis\nThe raw processing code is organized into these sub-pages. For example, “Historical Aerial Imagery” contains the Python code that was used process aerial imagery, and into an HTML Folium component.\n\nHistorical Aerial Imagery\n\nLibraries Used: Rasterio, Folium, PIL, Pyproj\n\nHistorical Census Data\n\nLibraries Used: Pygris, Cenpy, Pygris, Matplotlib, Geopandas, Pandas, Folium, Branca\n\nStreet Network Analysis\n\nLibraries Used:"
+    "text": "Navigate The Project Website\n\nTechnical Report\nThe project report detailing methodology, results, and conclusions. This includes generated images and html.\n\n\nVisual Components\nLook here if you are only interested in generated figures and html.\n\n\nExploratory Analysis\nThe Python processing code is organized into these sub-pages. For example, “Historical Aerial Imagery” contains the Python code that was used process aerial imagery, and into an HTML Folium component.\n\nHistorical Census Data\n\nLibraries Used: Pygris, Cenpy, Pygris, Matplotlib, Geopandas, Pandas, Folium, Branca\n\nHistorical Aerial Imagery\n\nLibraries Used: Rasterio, Folium, PIL, Pyproj\n\nStreet Network Analysis\n\nLibraries Used:"
   },
   {
     "objectID": "index.html#about-this-project",
