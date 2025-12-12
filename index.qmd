@@ -24,7 +24,7 @@ The raw processing code is organized into these sub-pages. For example, "Histori
 - [**Historical Aerial Imagery**](exploratory-analysis/historical-aerial-imagery.ipynb)
   - **Libraries Used**: Rasterio, Folium, PIL, Pyproj
 - [**Historical Census Data**](exploratory-analysis/census-data.ipynb)
-  - **Libraries Used**: 
+  - **Libraries Used**: Pygris, Cenpy, Matplotlib, Geopandas, Pandas
 - [**Street Network Analysis**](exploratory-analysis/osmnx-exploration.ipynb)
   - **Libraries Used**: 
 
