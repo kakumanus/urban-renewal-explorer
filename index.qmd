@@ -16,7 +16,7 @@ This project examines the lasting impact of mid-20th century urban renewal polic
 The project report detailing methodology, results, and conclusions.
 
 ### Interactive Component
-This is where the polished result of most of the Python code exists.
+This is where the polished results of most of the Python Exploratory Analysis (see below) code exists.
 
 ### Exploratory Analysis
 The raw processing code is organized into these sub-pages. For example, "Historical Aerial Imagery" contains the Python code that was used process aerial imagery, and into an HTML Folium component.
@@ -37,4 +37,4 @@ This work is part of MUSA 5500 at the University of Pennsylvania Weitzman School
 - **Historical Imagery**: Ohio Department of Transportation ([ODOT](https://www.transportation.ohio.gov/working/engineering/cadd-mapping/survey/aerial-imagery)) aerial photography archive (1946-present).
 - **Sanborn Maps**: Fire insurance maps showing detailed street networks from [Cincinnati Public Library](https://digital.cincinnatilibrary.org/digital/collection/p16998coll9/id/11099/rec/1) and the [Ohio Web Library](https://sanborn.ohioweblibrary.org/).
 - **Street Networks**: OpenStreetMap data via OSMnx.
-- **Census Data**: Historical and contemporary demographic data from 
+- **Census Data**: Historical and contemporary demographic data from the [Longitudinal Tract Database](https://s4.ad.brown.edu/projects/diversity/Researcher/Bridging.htm) and 2021 ACS 5-year estimates.
