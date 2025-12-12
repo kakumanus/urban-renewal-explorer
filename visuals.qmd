@@ -7,3 +7,32 @@ format:
   html:
     code-fold: true
 ---
+
+# Census Visualizations
+
+## LTDB (1970s to 2010s)
+
+```{=html}
+<iframe src="exploratory-analysis/census-data-output/hamilton_county_ltdb.html" width="100%" height="600px" style="border: none;"></iframe>
+```
+
+## 2021 ACS 5-year
+
+![Cincinnati Neighborhood Boundaries](exploratory-analysis/census-data-output/cinci_sna_boundaries.png)
+
+![Hamilton County Census Tracts](exploratory-analysis/census-data-output/hamilton_county_tracts.png)
+
+![Cincinnati Census Tracts + Neighborhood Boundaries](exploratory-analysis/census-data-output/census_tracts_cinci_sna.png)
+
+![Cincinnati Census Tracts Median Household Income](exploratory-analysis/census-data-output/cinci_mhh_inc.png)
+
+![Cincinnati Target Neighborhood Median Household Income](exploratory-analysis/census-data-output/cinci_target_neigh_inc.png)
+
+
+# ODOT Historical Aerial Imagery
+
+```{=html}
+<iframe src="exploratory-analysis/historical-aerial-imagery-output/map_with_named_drawing.html" width="100%" height="600px" style="border: none;"></iframe>
+```
+
+# Street Network Analysis (OSMnx)
