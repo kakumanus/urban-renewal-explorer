@@ -24,7 +24,9 @@ I focus on three primary data sources: aerial imagery from the Ohio Department o
 
 ### Sandborn Maps
 
-### Longitudinal Tract Data Base
+Historical Sanborn Fire Insurance Maps served as a data source for this project, providing highly detailed overviews of the study area from the early 20th century. Accessing these documents through the [Cincinnati Public Library digital collection](https://digital.cincinnatilibrary.org/digital/collection/p16998coll9/id/11099/rec/1) and the [Ohio Web Library](https://sanborn.ohioweblibrary.org/), the maps were used to roughly reconstruct the historic street grid. The maps also provided insights on the neighborhood's fabric by noting uses of certain buildings, such as churches and businesses (factories, gas stations, etc) that existed in the area prior to urban renewal.
+
+### Census Data & Longitudinal Tract Database
 
 ## Python Libraries Used
 

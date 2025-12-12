@@ -10,37 +10,31 @@ format:
 
 This project examines the lasting impact of mid-20th century urban renewal policies on Cincinnati's street networks and neighborhoods. Between the 1950s and 1970s, large-scale infrastructure projects—including interstate highway construction and urban redevelopment—fundamentally reshaped the urban fabric of American cities. This website documents what was lost and explores the ongoing effects on connectivity and community.
 
-## Project Overview
+## Navigate The Project Website
 
-Using historical aerial imagery, Sanborn fire insurance maps, census data, and Python geospatial analysis, this project:
-
--
--
--
-
-
-## Navigate This Site
-
-### [Technical Report](report.qmd)
+### [**Technical Report**](report.qmd)
 The project report detailing methodology, results, and conclusions.
 
+### Interactive Component
+This is where the polished result of most of the Python code exists.
+
 ### Exploratory Analysis
-INSERT
+The raw processing code is organized into these sub-pages. For example, "Historical Aerial Imagery" contains the Python code that was used process aerial imagery, and into an HTML Folium component.
 
-- [**Historical Aerial Imagery**](exploratory-analysis/historical-aerial-imagery.ipynb) -
-- [**Historical Census Data**](exploratory-analysis/census-data.ipynb) - 
-- [**Street Network Analysis**](exploratory-analysis/osmnx-exploration.ipynb) - 
-
-### Interactive Visualizations
-*Coming soon: Interactive maps showing before/after comparisons and exploring lost neighborhoods*
+- [**Historical Aerial Imagery**](exploratory-analysis/historical-aerial-imagery.ipynb)
+  - **Libraries Used**: Rasterio, Folium, PIL, Pyproj
+- [**Historical Census Data**](exploratory-analysis/census-data.ipynb)
+  - **Libraries Used**: 
+- [**Street Network Analysis**](exploratory-analysis/osmnx-exploration.ipynb)
+  - **Libraries Used**: 
 
 ## About This Project
 
-This work is part of MUSA 5500 at the University of Pennsylvania Weitzman School of Design. The project focuses on Cincinnati, Ohio, as a case study of urban renewal's spatial impacts.
+This work is part of MUSA 5500 at the University of Pennsylvania Weitzman School of Design. The project focuses on Cincinnati, Ohio, as a case study to work towards a more replicatable workflow.
 
 ### Data Sources
 
-- **Historical Imagery**: Ohio Department of Transportation (ODOT) aerial photography archive (1946-present)
-- **Sanborn Maps**: Georeferenced fire insurance maps showing detailed street networks
-- **Street Networks**: OpenStreetMap data via OSMnx
+- **Historical Imagery**: Ohio Department of Transportation ([ODOT](https://www.transportation.ohio.gov/working/engineering/cadd-mapping/survey/aerial-imagery)) aerial photography archive (1946-present).
+- **Sanborn Maps**: Fire insurance maps showing detailed street networks from [Cincinnati Public Library](https://digital.cincinnatilibrary.org/digital/collection/p16998coll9/id/11099/rec/1) and the [Ohio Web Library](https://sanborn.ohioweblibrary.org/).
+- **Street Networks**: OpenStreetMap data via OSMnx.
 - **Census Data**: Historical and contemporary demographic data from 

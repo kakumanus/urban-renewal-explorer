@@ -346,12 +346,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On This Page</h2>
    
   <ul>
-  <li><a href="#project-overview" id="toc-project-overview" class="nav-link active" data-scroll-target="#project-overview">Project Overview</a></li>
-  <li><a href="#navigate-this-site" id="toc-navigate-this-site" class="nav-link" data-scroll-target="#navigate-this-site">Navigate This Site</a>
+  <li><a href="#navigate-the-project-website" id="toc-navigate-the-project-website" class="nav-link active" data-scroll-target="#navigate-the-project-website">Navigate The Project Website</a>
   <ul class="collapse">
-  <li><a href="#technical-report" id="toc-technical-report" class="nav-link" data-scroll-target="#technical-report">Technical Report</a></li>
+  <li><a href="#technical-report" id="toc-technical-report" class="nav-link" data-scroll-target="#technical-report"><strong>Technical Report</strong></a></li>
+  <li><a href="#interactive-component" id="toc-interactive-component" class="nav-link" data-scroll-target="#interactive-component">Interactive Component</a></li>
   <li><a href="#exploratory-analysis" id="toc-exploratory-analysis" class="nav-link" data-scroll-target="#exploratory-analysis">Exploratory Analysis</a></li>
-  <li><a href="#interactive-visualizations" id="toc-interactive-visualizations" class="nav-link" data-scroll-target="#interactive-visualizations">Interactive Visualizations</a></li>
   </ul></li>
   <li><a href="#about-this-project" id="toc-about-this-project" class="nav-link" data-scroll-target="#about-this-project">About This Project</a>
   <ul class="collapse">
@@ -397,44 +396,44 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <p>This project examines the lasting impact of mid-20th century urban renewal policies on Cincinnati’s street networks and neighborhoods. Between the 1950s and 1970s, large-scale infrastructure projects—including interstate highway construction and urban redevelopment—fundamentally reshaped the urban fabric of American cities. This website documents what was lost and explores the ongoing effects on connectivity and community.</p>
-<section id="project-overview" class="level2">
-<h2 class="anchored" data-anchor-id="project-overview">Project Overview</h2>
-<p>Using historical aerial imagery, Sanborn fire insurance maps, census data, and Python geospatial analysis, this project:</p>
-<ul>
-<li></li>
-<li></li>
-<li></li>
-</ul>
-</section>
-<section id="navigate-this-site" class="level2">
-<h2 class="anchored" data-anchor-id="navigate-this-site">Navigate This Site</h2>
+<section id="navigate-the-project-website" class="level2">
+<h2 class="anchored" data-anchor-id="navigate-the-project-website">Navigate The Project Website</h2>
 <section id="technical-report" class="level3">
-<h3 class="anchored" data-anchor-id="technical-report"><a href="./report.html">Technical Report</a></h3>
+<h3 class="anchored" data-anchor-id="technical-report"><a href="./report.html"><strong>Technical Report</strong></a></h3>
 <p>The project report detailing methodology, results, and conclusions.</p>
+</section>
+<section id="interactive-component" class="level3">
+<h3 class="anchored" data-anchor-id="interactive-component">Interactive Component</h3>
+<p>This is where the polished result of most of the Python code exists.</p>
 </section>
 <section id="exploratory-analysis" class="level3">
 <h3 class="anchored" data-anchor-id="exploratory-analysis">Exploratory Analysis</h3>
-<p>INSERT</p>
+<p>The raw processing code is organized into these sub-pages. For example, “Historical Aerial Imagery” contains the Python code that was used process aerial imagery, and into an HTML Folium component.</p>
 <ul>
-<li><a href="./exploratory-analysis/historical-aerial-imagery.html"><strong>Historical Aerial Imagery</strong></a> -</li>
-<li><a href="./exploratory-analysis/census-data.html"><strong>Historical Census Data</strong></a> -</li>
-<li><a href="./exploratory-analysis/osmnx-exploration.html"><strong>Street Network Analysis</strong></a> -</li>
+<li><a href="./exploratory-analysis/historical-aerial-imagery.html"><strong>Historical Aerial Imagery</strong></a>
+<ul>
+<li><strong>Libraries Used</strong>: Rasterio, Folium, PIL, Pyproj</li>
+</ul></li>
+<li><a href="./exploratory-analysis/census-data.html"><strong>Historical Census Data</strong></a>
+<ul>
+<li><strong>Libraries Used</strong>:</li>
+</ul></li>
+<li><a href="./exploratory-analysis/osmnx-exploration.html"><strong>Street Network Analysis</strong></a>
+<ul>
+<li><strong>Libraries Used</strong>:</li>
+</ul></li>
 </ul>
-</section>
-<section id="interactive-visualizations" class="level3">
-<h3 class="anchored" data-anchor-id="interactive-visualizations">Interactive Visualizations</h3>
-<p><em>Coming soon: Interactive maps showing before/after comparisons and exploring lost neighborhoods</em></p>
 </section>
 </section>
 <section id="about-this-project" class="level2">
 <h2 class="anchored" data-anchor-id="about-this-project">About This Project</h2>
-<p>This work is part of MUSA 5500 at the University of Pennsylvania Weitzman School of Design. The project focuses on Cincinnati, Ohio, as a case study of urban renewal’s spatial impacts.</p>
+<p>This work is part of MUSA 5500 at the University of Pennsylvania Weitzman School of Design. The project focuses on Cincinnati, Ohio, as a case study to work towards a more replicatable workflow.</p>
 <section id="data-sources" class="level3">
 <h3 class="anchored" data-anchor-id="data-sources">Data Sources</h3>
 <ul>
-<li><strong>Historical Imagery</strong>: Ohio Department of Transportation (ODOT) aerial photography archive (1946-present)</li>
-<li><strong>Sanborn Maps</strong>: Georeferenced fire insurance maps showing detailed street networks</li>
-<li><strong>Street Networks</strong>: OpenStreetMap data via OSMnx</li>
+<li><strong>Historical Imagery</strong>: Ohio Department of Transportation (<a href="https://www.transportation.ohio.gov/working/engineering/cadd-mapping/survey/aerial-imagery">ODOT</a>) aerial photography archive (1946-present).</li>
+<li><strong>Sanborn Maps</strong>: Fire insurance maps showing detailed street networks from <a href="https://digital.cincinnatilibrary.org/digital/collection/p16998coll9/id/11099/rec/1">Cincinnati Public Library</a> and the <a href="https://sanborn.ohioweblibrary.org/">Ohio Web Library</a>.</li>
+<li><strong>Street Networks</strong>: OpenStreetMap data via OSMnx.</li>
 <li><strong>Census Data</strong>: Historical and contemporary demographic data from</li>
 </ul>
 
@@ -928,40 +927,34 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>This project examines the lasting impact of mid-20th century urban renewal policies on Cincinnati's street networks and neighborhoods. Between the 1950s and 1970s, large-scale infrastructure projects—including interstate highway construction and urban redevelopment—fundamentally reshaped the urban fabric of American cities. This website documents what was lost and explores the ongoing effects on connectivity and community.</span>
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">## Project Overview</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">## Navigate The Project Website</span></span>
 <span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>Using historical aerial imagery, Sanborn fire insurance maps, census data, and Python geospatial analysis, this project:</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>-</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>-</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>-</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fu">### [**Technical Report**](report.qmd)</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>The project report detailing methodology, results, and conclusions.</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="fu">### Interactive Component</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>This is where the polished result of most of the Python code exists.</span>
 <span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="fu">## Navigate This Site</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="fu">### Exploratory Analysis</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>The raw processing code is organized into these sub-pages. For example, "Historical Aerial Imagery" contains the Python code that was used process aerial imagery, and into an HTML Folium component.</span>
 <span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="fu">### [Technical Report](report.qmd)</span></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>The project report detailing methodology, results, and conclusions.</span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="fu">### Exploratory Analysis</span></span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>INSERT</span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="co">[</span><span class="ot">**Historical Aerial Imagery**</span><span class="co">](exploratory-analysis/historical-aerial-imagery.ipynb)</span> -</span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="co">[</span><span class="ot">**Historical Census Data**</span><span class="co">](exploratory-analysis/census-data.ipynb)</span> - </span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="co">[</span><span class="ot">**Street Network Analysis**</span><span class="co">](exploratory-analysis/osmnx-exploration.ipynb)</span> - </span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="fu">### Interactive Visualizations</span></span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>*Coming soon: Interactive maps showing before/after comparisons and exploring lost neighborhoods*</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="co">[</span><span class="ot">**Historical Aerial Imagery**</span><span class="co">](exploratory-analysis/historical-aerial-imagery.ipynb)</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>**Libraries Used**: Rasterio, Folium, PIL, Pyproj</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="co">[</span><span class="ot">**Historical Census Data**</span><span class="co">](exploratory-analysis/census-data.ipynb)</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>**Libraries Used**: </span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="co">[</span><span class="ot">**Street Network Analysis**</span><span class="co">](exploratory-analysis/osmnx-exploration.ipynb)</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>**Libraries Used**: </span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="fu">## About This Project</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>This work is part of MUSA 5500 at the University of Pennsylvania Weitzman School of Design. The project focuses on Cincinnati, Ohio, as a case study to work towards a more replicatable workflow.</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="fu">### Data Sources</span></span>
 <span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="fu">## About This Project</span></span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>This work is part of MUSA 5500 at the University of Pennsylvania Weitzman School of Design. The project focuses on Cincinnati, Ohio, as a case study of urban renewal's spatial impacts.</span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a><span class="fu">### Data Sources</span></span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Historical Imagery**: Ohio Department of Transportation (ODOT) aerial photography archive (1946-present)</span>
-<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Sanborn Maps**: Georeferenced fire insurance maps showing detailed street networks</span>
-<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Street Networks**: OpenStreetMap data via OSMnx</span>
-<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Census Data**: Historical and contemporary demographic data from </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Historical Imagery**: Ohio Department of Transportation (<span class="co">[</span><span class="ot">ODOT</span><span class="co">](https://www.transportation.ohio.gov/working/engineering/cadd-mapping/survey/aerial-imagery)</span>) aerial photography archive (1946-present).</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Sanborn Maps**: Fire insurance maps showing detailed street networks from <span class="co">[</span><span class="ot">Cincinnati Public Library</span><span class="co">](https://digital.cincinnatilibrary.org/digital/collection/p16998coll9/id/11099/rec/1)</span> and the <span class="co">[</span><span class="ot">Ohio Web Library</span><span class="co">](https://sanborn.ohioweblibrary.org/)</span>.</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Street Networks**: OpenStreetMap data via OSMnx.</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Census Data**: Historical and contemporary demographic data from </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 <footer class="footer">

@@ -11,7 +11,7 @@
     "href": "report.html#data-sources",
     "title": "Ohio Urban Renewal Explorer - Technical Report",
     "section": "Data Sources",
-    "text": "Data Sources\n\nODOT Historical Aerial Imagery\n\n\nSandborn Maps\n\n\nLongitudinal Tract Data Base"
+    "text": "Data Sources\n\nODOT Historical Aerial Imagery\n\n\nSandborn Maps\nHistorical Sanborn Fire Insurance Maps served as a data source for this project, providing highly detailed overviews of the study area from the early 20th century. Accessing these documents through the Cincinnati Public Library digital collection and the Ohio Web Library, the maps were used to roughly reconstruct the historic street grid. The maps also provided insights on the neighborhood’s fabric by noting uses of certain buildings, such as churches and businesses (factories, gas stations, etc) that existed in the area prior to urban renewal.\n\n\nCensus Data & Longitudinal Tract Database"
   },
   {
     "objectID": "report.html#python-libraries-used",
@@ -63,24 +63,17 @@
     "text": "This project examines the lasting impact of mid-20th century urban renewal policies on Cincinnati’s street networks and neighborhoods. Between the 1950s and 1970s, large-scale infrastructure projects—including interstate highway construction and urban redevelopment—fundamentally reshaped the urban fabric of American cities. This website documents what was lost and explores the ongoing effects on connectivity and community."
   },
   {
-    "objectID": "index.html#project-overview",
-    "href": "index.html#project-overview",
+    "objectID": "index.html#navigate-the-project-website",
+    "href": "index.html#navigate-the-project-website",
     "title": "Welcome",
-    "section": "Project Overview",
-    "text": "Project Overview\nUsing historical aerial imagery, Sanborn fire insurance maps, census data, and Python geospatial analysis, this project:"
-  },
-  {
-    "objectID": "index.html#navigate-this-site",
-    "href": "index.html#navigate-this-site",
-    "title": "Welcome",
-    "section": "Navigate This Site",
-    "text": "Navigate This Site\n\nTechnical Report\nThe project report detailing methodology, results, and conclusions.\n\n\nExploratory Analysis\nINSERT\n\nHistorical Aerial Imagery -\nHistorical Census Data -\nStreet Network Analysis -\n\n\n\nInteractive Visualizations\nComing soon: Interactive maps showing before/after comparisons and exploring lost neighborhoods"
+    "section": "Navigate The Project Website",
+    "text": "Navigate The Project Website\n\nTechnical Report\nThe project report detailing methodology, results, and conclusions.\n\n\nInteractive Component\nThis is where the polished result of most of the Python code exists.\n\n\nExploratory Analysis\nThe raw processing code is organized into these sub-pages. For example, “Historical Aerial Imagery” contains the Python code that was used process aerial imagery, and into an HTML Folium component.\n\nHistorical Aerial Imagery\n\nLibraries Used: Rasterio, Folium, PIL, Pyproj\n\nHistorical Census Data\n\nLibraries Used:\n\nStreet Network Analysis\n\nLibraries Used:"
   },
   {
     "objectID": "index.html#about-this-project",
     "href": "index.html#about-this-project",
     "title": "Welcome",
     "section": "About This Project",
-    "text": "About This Project\nThis work is part of MUSA 5500 at the University of Pennsylvania Weitzman School of Design. The project focuses on Cincinnati, Ohio, as a case study of urban renewal’s spatial impacts.\n\nData Sources\n\nHistorical Imagery: Ohio Department of Transportation (ODOT) aerial photography archive (1946-present)\nSanborn Maps: Georeferenced fire insurance maps showing detailed street networks\nStreet Networks: OpenStreetMap data via OSMnx\nCensus Data: Historical and contemporary demographic data from"
+    "text": "About This Project\nThis work is part of MUSA 5500 at the University of Pennsylvania Weitzman School of Design. The project focuses on Cincinnati, Ohio, as a case study to work towards a more replicatable workflow.\n\nData Sources\n\nHistorical Imagery: Ohio Department of Transportation (ODOT) aerial photography archive (1946-present).\nSanborn Maps: Fire insurance maps showing detailed street networks from Cincinnati Public Library and the Ohio Web Library.\nStreet Networks: OpenStreetMap data via OSMnx.\nCensus Data: Historical and contemporary demographic data from"
   }
 ]
