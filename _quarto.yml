@@ -14,8 +14,8 @@ website:
     left:
       - text: "Technical Report"
         href: report.qmd
-      - text: "Interactive Component"
-        href: interactive.ipynb
+      - text: "Visual Components"
+        href: visuals.qmd
       - text: "Exploratory Code"
         menu:
           - text: "Aerial Imagery"

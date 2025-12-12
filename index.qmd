@@ -1,7 +1,7 @@
 ---
 title: "Welcome"
 subtitle: "Landing page for Ohio Urban Renewal Explorer - MUSA 5500 Final Project"
-author: "Sujanesh Kakumanu"
+author: "Sujan Kakumanu"
 date: December 12 2025
 format:
   html:
@@ -13,18 +13,18 @@ This project examines the lasting impact of mid-20th century urban renewal polic
 ## Navigate The Project Website
 
 ### [**Technical Report**](report.qmd)
-The project report detailing methodology, results, and conclusions.
+The project report detailing methodology, results, and conclusions. This includes generated images and html.
 
-### Interactive Component
-This is where the polished results of most of the Python Exploratory Analysis (see below) code exists.
+### [**Visual Components**](visuals.qmd)
+Look here if you are only interested in generated figures and html.
 
 ### Exploratory Analysis
 The raw processing code is organized into these sub-pages. For example, "Historical Aerial Imagery" contains the Python code that was used process aerial imagery, and into an HTML Folium component.
 
-- [**Historical Aerial Imagery**](exploratory-analysis/historical-aerial-imagery.ipynb)
+- [**Historical Aerial Imagery Part 1**](exploratory-analysis/historical-aerial-imagery.ipynb)
   - **Libraries Used**: Rasterio, Folium, PIL, Pyproj
 - [**Historical Census Data**](exploratory-analysis/census-data.ipynb)
-  - **Libraries Used**: Pygris, Cenpy, Matplotlib, Geopandas, Pandas
+  - **Libraries Used**: Pygris, Cenpy, Pygris, Matplotlib, Geopandas, Pandas, Folium, Branca
 - [**Street Network Analysis**](exploratory-analysis/osmnx-exploration.ipynb)
   - **Libraries Used**: 
 
