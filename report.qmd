@@ -67,7 +67,20 @@ I also used QGIS to georeference these images and turn them into GeoTIFFs. These
 
 ## Street Network Analysis (OSMnx)
 
-One of the resulting products from the ODOT Aerial Image section was a new GeoJSON containing historical streets in Cincinnati. This needed some preprocessing to use, namely it was missing intersections that had to be added. Next, I did some simple visualizations to show the historic grid next to and on top of the current street grid. Finally, I used this to conduct some street network analysis - showing how much disruption to the grid occurred.
+The historical aerial imagery and Sanborn maps allowed me to manually reconstruct portions of the pre-urban renewal street grid as a GeoJSON file containing 23 street segments. However, this raw line data lacked the information needed for proper network analysis—specifically, it didn't identify where streets intersected with one another.
+
+To enable connectivity analysis, I did the following:
+
+1. **Generated intersection nodes** by detecting where street LineStrings crossed or met, then merging nearby points (within ~1 meter) to create unique intersection nodes
+2. **Clipped the network** to a focused bounding box covering the core West End study area (south of Union Terminal, west of Central Avenue)
+3. **Downloaded the current street network** for the same geographic extent using OSMnx.
+
+With both historical and current networks represented as proper graphs with nodes and edges, I used NetworkX to calculate two key connectivity metrics:
+
+- **Intersection count**: A direct measure of how many decision points existed in the street grid
+- **Network density**: A normalized metric (0 to 1) indicating how interconnected the network is—higher values mean more possible routes between locations
+
+Finally, I created side-by-side visualizations showing the historical grid, current grid, and an overlay highlighting lost streets.
 
 # Results
 
