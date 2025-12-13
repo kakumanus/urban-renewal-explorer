@@ -36,3 +36,14 @@ format:
 ```
 
 # Street Network Analysis (OSMnx)
+
+![Historical Network with new Nodes](exploratory-analysis/osmnx-output/historical_network_with_nodes.png)
+
+![Kenyon-Barr/Westend Historical vs Current Street Grid](exploratory-analysis/osmnx-output/street_network_comparison.png)
+
+```{=html}
+</br>
+<h5>Table: Intersections and Network Density in the Study Area (1950s vs 2000s)</h5>
+<iframe src="exploratory-analysis/osmnx-output/networkx.html" width="100%" style="border: none;"></iframe>
+```
+
