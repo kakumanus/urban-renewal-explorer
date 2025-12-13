@@ -453,7 +453,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="street-network-analysis-osmnx" class="level2">
 <h2 class="anchored" data-anchor-id="street-network-analysis-osmnx">Street Network Analysis (OSMnx)</h2>
-<p>One of the resulting products from the ODOT Aerial Image section was a new GeoJSON containing historical streets in Cincinnati. I used this to conduct some street network analysis - showing how much disruption to the grid occurred.</p>
+<p>One of the resulting products from the ODOT Aerial Image section was a new GeoJSON containing historical streets in Cincinnati. This needed some preprocessing to use, namely it was missing intersections that had to be added. Next, I did some simple visualizations to show the historic grid next to and on top of the current street grid. Finally, I used this to conduct some street network analysis - showing how much disruption to the grid occurred.</p>
 </section>
 </section>
 <section id="results" class="level1">
@@ -502,6 +502,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="street-network-analysis" class="level2">
 <h2 class="anchored" data-anchor-id="street-network-analysis">Street Network Analysis</h2>
+<p>Below are the results of the OSMnx visualization and network analysis. First is the historic street grid and intersections, current street grid and intersections, and both overlaid. Next is a table showing the results of the network analysis - showing how much of a dense street grid was lost.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="exploratory-analysis/osmnx-output/street_network_comparison.png" class="img-fluid figure-img"></p>
+<figcaption>Cincinnati Target Neighborhood Median Household Income</figcaption>
+</figure>
+</div>
+<br>
+<h5 class="anchored">Table: Intersections and Network Density in the Study Area (1950s vs 2000s)</h5>
+<iframe src="exploratory-analysis/osmnx-output/networkx.html" width="100%" style="border: none;"></iframe>
 </section>
 </section>
 <section id="conclusion" class="level1">
@@ -1063,7 +1073,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a><span class="fu">## Street Network Analysis (OSMnx)</span></span>
 <span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a>One of the resulting products from the ODOT Aerial Image section was a new GeoJSON containing historical streets in Cincinnati. I used this to conduct some street network analysis - showing how much disruption to the grid occurred. </span>
+<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a>One of the resulting products from the ODOT Aerial Image section was a new GeoJSON containing historical streets in Cincinnati. This needed some preprocessing to use, namely it was missing intersections that had to be added. Next, I did some simple visualizations to show the historic grid next to and on top of the current street grid. Finally, I used this to conduct some street network analysis - showing how much disruption to the grid occurred.</span>
 <span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a><span class="fu"># Results</span></span>
 <span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a></span>
@@ -1097,25 +1107,37 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-101"><a href="#cb1-101" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-102"><a href="#cb1-102" aria-hidden="true" tabindex="-1"></a><span class="fu">## Street Network Analysis</span></span>
 <span id="cb1-103"><a href="#cb1-103" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-104"><a href="#cb1-104" aria-hidden="true" tabindex="-1"></a><span class="fu"># Conclusion</span></span>
+<span id="cb1-104"><a href="#cb1-104" aria-hidden="true" tabindex="-1"></a>Below are the results of the OSMnx visualization and network analysis. First is the historic street grid and intersections, current street grid and intersections, and both overlaid. Next is a table showing the results of the network analysis - showing how much of a dense street grid was lost.</span>
 <span id="cb1-105"><a href="#cb1-105" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-106"><a href="#cb1-106" aria-hidden="true" tabindex="-1"></a>The visualizations above highlight several patterns in Cincinnati’s urban core. The West End absorbed catastrophic population loss following Urban Renewal, and its median household incomes have consistently lagged behind the rest of the city — even compared to nearby neighborhoods like Over-the-Rhine and Pendleton. This shows up clearly in both the contemporary census data and the LTDB timeline.</span>
+<span id="cb1-106"><a href="#cb1-106" aria-hidden="true" tabindex="-1"></a><span class="al">![Cincinnati Target Neighborhood Median Household Income](exploratory-analysis/osmnx-output/street_network_comparison.png)</span></span>
 <span id="cb1-107"><a href="#cb1-107" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-108"><a href="#cb1-108" aria-hidden="true" tabindex="-1"></a>The historical aerial imagery underscores the scale of what was erased. Blocks that once held homes, churches and gathering spaces, and small businesses have been replaced by scattered housing, industrial sites, and warehouses.</span>
-<span id="cb1-109"><a href="#cb1-109" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-110"><a href="#cb1-110" aria-hidden="true" tabindex="-1"></a>Finally, the current street network reveals a level of fragmentation that the rest of the area doesn’t experience. This break in connectivity poses a real challenge for any future effort to transition the area away from heavy industry and back toward the kind of residential and mixed-use fabric that shaped the neighborhood in the past.</span>
-<span id="cb1-111"><a href="#cb1-111" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-112"><a href="#cb1-112" aria-hidden="true" tabindex="-1"></a><span class="fu">## Future Steps</span></span>
-<span id="cb1-113"><a href="#cb1-113" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-114"><a href="#cb1-114" aria-hidden="true" tabindex="-1"></a>The primary challenge encountered during this project was the integration of disparate and non-georeferenced historical data sources. Due to time constraints, the reconstruction and analysis of the pre-urban renewal urban fabric—including drawing historic street grids and referencing structural features from the Sanborn maps and ODOT aerial imagery—were largely performed through manual methods.</span>
+<span id="cb1-108"><a href="#cb1-108" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-109"><a href="#cb1-109" aria-hidden="true" tabindex="-1"></a><span class="in">```{=html}</span></span>
+<span id="cb1-110"><a href="#cb1-110" aria-hidden="true" tabindex="-1"></a><span class="in">&lt;/br&gt;</span></span>
+<span id="cb1-111"><a href="#cb1-111" aria-hidden="true" tabindex="-1"></a><span class="in">&lt;h5&gt;Table: Intersections and Network Density in the Study Area (1950s vs 2000s)&lt;/h5&gt;</span></span>
+<span id="cb1-112"><a href="#cb1-112" aria-hidden="true" tabindex="-1"></a><span class="in">&lt;iframe src="exploratory-analysis/osmnx-output/networkx.html" width="100%" style="border: none;"&gt;&lt;/iframe&gt;</span></span>
+<span id="cb1-113"><a href="#cb1-113" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb1-114"><a href="#cb1-114" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-115"><a href="#cb1-115" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-116"><a href="#cb1-116" aria-hidden="true" tabindex="-1"></a>Moving forward, the project would benefit significantly from two things.</span>
+<span id="cb1-116"><a href="#cb1-116" aria-hidden="true" tabindex="-1"></a><span class="fu"># Conclusion</span></span>
 <span id="cb1-117"><a href="#cb1-117" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-118"><a href="#cb1-118" aria-hidden="true" tabindex="-1"></a>First, automating historical data extraction:</span>
-<span id="cb1-119"><a href="#cb1-119" aria-hidden="true" tabindex="-1"></a>I started experimenting with using Python computer vision tools to automatically pull out street segments and text from the high-resolution Sanborn maps. The early tests were hit-or-miss, but the code is saved for future use. If this approach can be pushed further, it would seriously cut down the manual work and give a cleaner, more accurate comparison between the historic and modern street networks — especially for measuring how much connectivity was lost.</span>
-<span id="cb1-120"><a href="#cb1-120" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-121"><a href="#cb1-121" aria-hidden="true" tabindex="-1"></a>Second, digging deeper into the socioeconomic patterns with clustering:</span>
-<span id="cb1-122"><a href="#cb1-122" aria-hidden="true" tabindex="-1"></a>The time-series income data makes it pretty clear that the urban renewal area split off from its neighbors after the 1960s. To actually measure that, a spatial clustering analysis (like k-means or DBSCAN) could group census tracts based on things like median income or housing values. That would give an objective picture of how different areas shifted over time and show whether nearby neighborhoods followed different paths — basically confirming how the footprint of poverty or growth changed across the decades.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+<span id="cb1-118"><a href="#cb1-118" aria-hidden="true" tabindex="-1"></a>The visualizations above highlight several patterns in Cincinnati’s urban core. The West End absorbed catastrophic population loss following Urban Renewal, and its median household incomes have consistently lagged behind the rest of the city — even compared to nearby neighborhoods like Over-the-Rhine and Pendleton. This shows up clearly in both the contemporary census data and the LTDB timeline.</span>
+<span id="cb1-119"><a href="#cb1-119" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-120"><a href="#cb1-120" aria-hidden="true" tabindex="-1"></a>The historical aerial imagery underscores the scale of what was erased. Blocks that once held homes, churches and gathering spaces, and small businesses have been replaced by scattered housing, industrial sites, and warehouses.</span>
+<span id="cb1-121"><a href="#cb1-121" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-122"><a href="#cb1-122" aria-hidden="true" tabindex="-1"></a>Finally, the current street network reveals a level of fragmentation that the rest of the area doesn’t experience. This break in connectivity poses a real challenge for any future effort to transition the area away from heavy industry and back toward the kind of residential and mixed-use fabric that shaped the neighborhood in the past.</span>
+<span id="cb1-123"><a href="#cb1-123" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-124"><a href="#cb1-124" aria-hidden="true" tabindex="-1"></a><span class="fu">## Future Steps</span></span>
+<span id="cb1-125"><a href="#cb1-125" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-126"><a href="#cb1-126" aria-hidden="true" tabindex="-1"></a>The primary challenge encountered during this project was the integration of disparate and non-georeferenced historical data sources. Due to time constraints, the reconstruction and analysis of the pre-urban renewal urban fabric—including drawing historic street grids and referencing structural features from the Sanborn maps and ODOT aerial imagery—were largely performed through manual methods.</span>
+<span id="cb1-127"><a href="#cb1-127" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-128"><a href="#cb1-128" aria-hidden="true" tabindex="-1"></a>Moving forward, the project would benefit significantly from two things.</span>
+<span id="cb1-129"><a href="#cb1-129" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-130"><a href="#cb1-130" aria-hidden="true" tabindex="-1"></a>First, automating historical data extraction:</span>
+<span id="cb1-131"><a href="#cb1-131" aria-hidden="true" tabindex="-1"></a>I started experimenting with using Python computer vision tools to automatically pull out street segments and text from the high-resolution Sanborn maps. The early tests were hit-or-miss, but the code is saved for future use. If this approach can be pushed further, it would seriously cut down the manual work and give a cleaner, more accurate comparison between the historic and modern street networks — especially for measuring how much connectivity was lost.</span>
+<span id="cb1-132"><a href="#cb1-132" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-133"><a href="#cb1-133" aria-hidden="true" tabindex="-1"></a>Second, digging deeper into the socioeconomic patterns with clustering:</span>
+<span id="cb1-134"><a href="#cb1-134" aria-hidden="true" tabindex="-1"></a>The time-series income data makes it pretty clear that the urban renewal area split off from its neighbors after the 1960s. To actually measure that, a spatial clustering analysis (like k-means or DBSCAN) could group census tracts based on things like median income or housing values. That would give an objective picture of how different areas shifted over time and show whether nearby neighborhoods followed different paths — basically confirming how the footprint of poverty or growth changed across the decades.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 <footer class="footer">

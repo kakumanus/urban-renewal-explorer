@@ -26,7 +26,7 @@ The Python processing code is organized into these sub-pages. For example, "Hist
 - [**Historical Aerial Imagery**](exploratory-analysis/historical-aerial-imagery.ipynb)
   - **Libraries Used**: Rasterio, Folium, PIL, Pyproj
 - [**Street Network Analysis**](exploratory-analysis/osmnx-exploration.ipynb)
-  - **Libraries Used**: 
+  - **Libraries Used**: OSMnx, Networkx, Shapely, Matplotlib, Geopandas, Pandas
 
 ## About This Project
 

@@ -67,7 +67,7 @@ I also used QGIS to georeference these images and turn them into GeoTIFFs. These
 
 ## Street Network Analysis (OSMnx)
 
-One of the resulting products from the ODOT Aerial Image section was a new GeoJSON containing historical streets in Cincinnati. I used this to conduct some street network analysis - showing how much disruption to the grid occurred. 
+One of the resulting products from the ODOT Aerial Image section was a new GeoJSON containing historical streets in Cincinnati. This needed some preprocessing to use, namely it was missing intersections that had to be added. Next, I did some simple visualizations to show the historic grid next to and on top of the current street grid. Finally, I used this to conduct some street network analysis - showing how much disruption to the grid occurred.
 
 # Results
 
@@ -100,6 +100,18 @@ Below is the result of processing the ODOT aerial GeoTIFF and placing into a Fol
 **Note the ability to draw and download streets in a GeoJSON format.**
 
 ## Street Network Analysis
+
+Below are the results of the OSMnx visualization and network analysis. First is the historic street grid and intersections, current street grid and intersections, and both overlaid. Next is a table showing the results of the network analysis - showing how much of a dense street grid was lost.
+
+![Cincinnati Target Neighborhood Median Household Income](exploratory-analysis/osmnx-output/street_network_comparison.png)
+
+
+```{=html}
+</br>
+<h5>Table: Intersections and Network Density in the Study Area (1950s vs 2000s)</h5>
+<iframe src="exploratory-analysis/osmnx-output/networkx.html" width="100%" style="border: none;"></iframe>
+```
+
 
 # Conclusion
 

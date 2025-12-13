@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>osmnx-exploration – Ohio Urban Renewal Explorer</title>
+<title>OSMnx and Networkx Exploration – Ohio Urban Renewal Explorer</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -339,375 +339,311 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On This Page</h2>
+   
+  <ul>
+  <li><a href="#urban-renewal-explorer---exploratory-analysis" id="toc-urban-renewal-explorer---exploratory-analysis" class="nav-link active" data-scroll-target="#urban-renewal-explorer---exploratory-analysis">Urban Renewal Explorer - Exploratory Analysis</a></li>
+  <li><a href="#background" id="toc-background" class="nav-link" data-scroll-target="#background">Background</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"><h1 class="title display-7"></h1></header><div class="quarto-title-block"><div class="quarto-title-tools-only"><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li></ul></div></div>
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">OSMnx and Networkx Exploration</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li></ul></div></div>
+</div>
 
 
 
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
 
 
-<div id="fc4159a4c52d2f82" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-12T02:47:38.706214Z&quot;,&quot;start_time&quot;:&quot;2025-12-12T02:47:35.761823Z&quot;}}" data-execution_count="13">
+</header>
+
+
+<section id="urban-renewal-explorer---exploratory-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="urban-renewal-explorer---exploratory-analysis">Urban Renewal Explorer - Exploratory Analysis</h3>
+</section>
+<section id="background" class="level3">
+<h3 class="anchored" data-anchor-id="background">Background</h3>
+<p>In my aerial imagery work, I created a way to digitize some historic streets into geojson format. Below, I do the following:</p>
+<ul>
+<li>Process the geojson to make sure it has intersection nodes and visualize</li>
+<li>Visualize a bounding box around Kenyon-Barr in the West End (before and after urban renewal)</li>
+<li>Do a simple network analysis of some of the connectivity loss</li>
+</ul>
+<div id="655c1ffe398a4b24" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-13T02:43:53.595006Z&quot;,&quot;start_time&quot;:&quot;2025-12-13T02:43:53.591988Z&quot;}}" data-execution_count="28">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># full_fixed_osmnx_script.py</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> osmnx <span class="im">as</span> ox</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> networkx <span class="im">as</span> nx</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> geopandas <span class="im">as</span> gpd</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> shapely.geometry <span class="im">import</span> Point, LineString</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> json</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>ox.settings.use_cache <span class="op">=</span> <span class="va">True</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>ox.settings.log_console <span class="op">=</span> <span class="va">False</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Using the aerial image</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"># SW: (39.097413, -84.540747), NE: (39.120322, -84.512108)</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>north <span class="op">=</span> <span class="fl">39.120322</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>south <span class="op">=</span> <span class="fl">39.097413</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>east <span class="op">=</span> <span class="op">-</span><span class="fl">84.512108</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>west <span class="op">=</span> <span class="op">-</span><span class="fl">84.540747</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Downloading current street network from OpenStreetMap..."</span>)</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>G <span class="op">=</span> ox.graph_from_bbox(north, south, east, west, network_type<span class="op">=</span><span class="st">"drive"</span>)</span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Network has </span><span class="sc">{</span><span class="bu">len</span>(G.nodes)<span class="sc">}</span><span class="ss"> nodes and </span><span class="sc">{</span><span class="bu">len</span>(G.edges)<span class="sc">}</span><span class="ss"> edges"</span>)</span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>nodes_gdf, edges_gdf <span class="op">=</span> ox.graph_to_gdfs(G)</span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="co"># edges_gdf['length'] is in meters in OSMnx</span></span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="st">"length"</span> <span class="kw">in</span> edges_gdf.columns:</span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>    total_length_km <span class="op">=</span> edges_gdf[<span class="st">"length"</span>].<span class="bu">sum</span>() <span class="op">/</span> <span class="fl">1000.0</span></span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>    total_length_km <span class="op">=</span> edges_gdf.geometry.length.<span class="bu">sum</span>() <span class="op">/</span> <span class="fl">1000.0</span></span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Total street length: </span><span class="sc">{</span>total_length_km<span class="sc">:.2f}</span><span class="ss"> km"</span>)</span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> safe_buffer_zero(geom):</span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>    <span class="cf">try</span>:</span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> geom <span class="kw">is</span> <span class="va">None</span>:</span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> <span class="va">None</span></span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>        fixed <span class="op">=</span> geom.<span class="bu">buffer</span>(<span class="dv">0</span>)</span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> fixed.is_empty:</span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> geom</span>
-<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> fixed</span>
-<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>    <span class="cf">except</span> <span class="pp">Exception</span>:</span>
-<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> geom</span>
-<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> flatten_value_for_geojson(v):</span>
-<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> pd.isna(v):</span>
-<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">None</span></span>
-<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">isinstance</span>(v, (<span class="bu">list</span>, <span class="bu">tuple</span>, <span class="bu">set</span>)):</span>
-<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">", "</span>.join(<span class="bu">map</span>(<span class="kw">lambda</span> x: <span class="bu">str</span>(x) <span class="cf">if</span> x <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span> <span class="cf">else</span> <span class="st">""</span>, v))</span>
-<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">isinstance</span>(v, <span class="bu">dict</span>):</span>
-<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>        <span class="cf">try</span>:</span>
-<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> json.dumps(v, ensure_ascii<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>        <span class="cf">except</span> <span class="pp">Exception</span>:</span>
-<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> <span class="bu">str</span>(v)</span>
-<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">isinstance</span>(v, (np.integer, np.floating, np.bool_)):</span>
-<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> v.item()</span>
-<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> v</span>
-<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">=== Basic Network Statistics ==="</span>)</span>
-<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span>:</span>
-<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a>    stats <span class="op">=</span> ox.basic_stats(G)</span>
-<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> key, value <span class="kw">in</span> stats.items():</span>
-<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="bu">isinstance</span>(value, (<span class="bu">int</span>, <span class="bu">float</span>)):</span>
-<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>key<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>value<span class="sc">:.4f}</span><span class="ss">"</span> <span class="cf">if</span> <span class="bu">isinstance</span>(value, <span class="bu">float</span>) <span class="cf">else</span> <span class="ss">f"</span><span class="sc">{</span>key<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>value<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
-<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>key<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span><span class="bu">type</span>(value)<span class="sc">.</span><span class="va">__name__</span><span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a><span class="cf">except</span> <span class="pp">Exception</span> <span class="im">as</span> e:</span>
-<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Warning: ox.basic_stats failed:"</span>, e)</span>
-<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">=== Calculating Centrality Metrics ==="</span>)</span>
-<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Note: for MultiDiGraph we aggregate to a simple undirected graph for centrality calculations."</span>)</span>
-<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a simplified undirected Graph for centrality metrics.</span></span>
-<span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a><span class="co"># We aggregate parallel edges by taking the minimum 'length' (if present).</span></span>
-<span id="cb1-78"><a href="#cb1-78" aria-hidden="true" tabindex="-1"></a>Gu <span class="op">=</span> nx.Graph()</span>
-<span id="cb1-79"><a href="#cb1-79" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> u, v, data <span class="kw">in</span> G.edges(data<span class="op">=</span><span class="va">True</span>):</span>
-<span id="cb1-80"><a href="#cb1-80" aria-hidden="true" tabindex="-1"></a>    length <span class="op">=</span> data.get(<span class="st">"length"</span>, <span class="va">None</span>)</span>
-<span id="cb1-81"><a href="#cb1-81" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> length <span class="kw">is</span> <span class="va">None</span>:</span>
-<span id="cb1-82"><a href="#cb1-82" aria-hidden="true" tabindex="-1"></a>        <span class="co"># fallback to 1 if no length attribute; closeness/betweenness require positive distance</span></span>
-<span id="cb1-83"><a href="#cb1-83" aria-hidden="true" tabindex="-1"></a>        length <span class="op">=</span> <span class="fl">1.0</span></span>
-<span id="cb1-84"><a href="#cb1-84" aria-hidden="true" tabindex="-1"></a>    <span class="co"># networkx Graph allows only one edge per (u, v) tuple; we keep smallest length</span></span>
-<span id="cb1-85"><a href="#cb1-85" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> Gu.has_edge(u, v):</span>
-<span id="cb1-86"><a href="#cb1-86" aria-hidden="true" tabindex="-1"></a>        <span class="co"># keep the smallest length</span></span>
-<span id="cb1-87"><a href="#cb1-87" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> length <span class="op">&lt;</span> Gu[u][v].get(<span class="st">"length"</span>, np.inf):</span>
-<span id="cb1-88"><a href="#cb1-88" aria-hidden="true" tabindex="-1"></a>            Gu[u][v][<span class="st">"length"</span>] <span class="op">=</span> length</span>
-<span id="cb1-89"><a href="#cb1-89" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
-<span id="cb1-90"><a href="#cb1-90" aria-hidden="true" tabindex="-1"></a>        Gu.add_edge(u, v, length<span class="op">=</span>length)</span>
-<span id="cb1-91"><a href="#cb1-91" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-92"><a href="#cb1-92" aria-hidden="true" tabindex="-1"></a><span class="co"># Betweenness centrality - on the undirected simplified graph</span></span>
-<span id="cb1-93"><a href="#cb1-93" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Calculating betweenness centrality (this can be slow for bigger graphs)..."</span>)</span>
-<span id="cb1-94"><a href="#cb1-94" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span>:</span>
-<span id="cb1-95"><a href="#cb1-95" aria-hidden="true" tabindex="-1"></a>    betweenness <span class="op">=</span> nx.betweenness_centrality(Gu, weight<span class="op">=</span><span class="st">"length"</span>, normalized<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb1-96"><a href="#cb1-96" aria-hidden="true" tabindex="-1"></a><span class="cf">except</span> <span class="pp">Exception</span> <span class="im">as</span> e:</span>
-<span id="cb1-97"><a href="#cb1-97" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Betweenness centrality failed or is too slow; falling back to unweighted version. Error:"</span>, e)</span>
-<span id="cb1-98"><a href="#cb1-98" aria-hidden="true" tabindex="-1"></a>    betweenness <span class="op">=</span> nx.betweenness_centrality(Gu, normalized<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb1-99"><a href="#cb1-99" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-100"><a href="#cb1-100" aria-hidden="true" tabindex="-1"></a><span class="co"># Closeness centrality - uses 'length' as distance</span></span>
-<span id="cb1-101"><a href="#cb1-101" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Calculating closeness centrality..."</span>)</span>
-<span id="cb1-102"><a href="#cb1-102" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span>:</span>
-<span id="cb1-103"><a href="#cb1-103" aria-hidden="true" tabindex="-1"></a>    closeness <span class="op">=</span> nx.closeness_centrality(Gu, distance<span class="op">=</span><span class="st">"length"</span>)</span>
-<span id="cb1-104"><a href="#cb1-104" aria-hidden="true" tabindex="-1"></a><span class="cf">except</span> <span class="pp">Exception</span> <span class="im">as</span> e:</span>
-<span id="cb1-105"><a href="#cb1-105" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Closeness centrality fell back to unweighted version. Error:"</span>, e)</span>
-<span id="cb1-106"><a href="#cb1-106" aria-hidden="true" tabindex="-1"></a>    closeness <span class="op">=</span> nx.closeness_centrality(Gu)</span>
-<span id="cb1-107"><a href="#cb1-107" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-108"><a href="#cb1-108" aria-hidden="true" tabindex="-1"></a><span class="co"># Degree centrality - use original directed graph's degree (or undirected version)</span></span>
-<span id="cb1-109"><a href="#cb1-109" aria-hidden="true" tabindex="-1"></a>degree_centrality <span class="op">=</span> nx.degree_centrality(Gu)</span>
-<span id="cb1-110"><a href="#cb1-110" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-111"><a href="#cb1-111" aria-hidden="true" tabindex="-1"></a><span class="co"># Map centrality values back to nodes_gdf (index is node id)</span></span>
-<span id="cb1-112"><a href="#cb1-112" aria-hidden="true" tabindex="-1"></a>nodes_gdf <span class="op">=</span> nodes_gdf.copy()</span>
-<span id="cb1-113"><a href="#cb1-113" aria-hidden="true" tabindex="-1"></a>nodes_gdf[<span class="st">"betweenness"</span>] <span class="op">=</span> nodes_gdf.index.<span class="bu">map</span>(<span class="kw">lambda</span> nid: betweenness.get(nid, <span class="fl">0.0</span>))</span>
-<span id="cb1-114"><a href="#cb1-114" aria-hidden="true" tabindex="-1"></a>nodes_gdf[<span class="st">"closeness"</span>] <span class="op">=</span> nodes_gdf.index.<span class="bu">map</span>(<span class="kw">lambda</span> nid: closeness.get(nid, <span class="fl">0.0</span>))</span>
-<span id="cb1-115"><a href="#cb1-115" aria-hidden="true" tabindex="-1"></a>nodes_gdf[<span class="st">"degree_centrality"</span>] <span class="op">=</span> nodes_gdf.index.<span class="bu">map</span>(<span class="kw">lambda</span> nid: degree_centrality.get(nid, <span class="fl">0.0</span>))</span>
-<span id="cb1-116"><a href="#cb1-116" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-117"><a href="#cb1-117" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Centrality calculations complete!"</span>)</span>
-<span id="cb1-118"><a href="#cb1-118" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-119"><a href="#cb1-119" aria-hidden="true" tabindex="-1"></a><span class="co"># ============================================================================</span></span>
-<span id="cb1-120"><a href="#cb1-120" aria-hidden="true" tabindex="-1"></a><span class="co"># 5. ANALYZE STREET CONNECTIVITY</span></span>
-<span id="cb1-121"><a href="#cb1-121" aria-hidden="true" tabindex="-1"></a><span class="co"># ============================================================================</span></span>
-<span id="cb1-122"><a href="#cb1-122" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-123"><a href="#cb1-123" aria-hidden="true" tabindex="-1"></a>dead_ends <span class="op">=</span> [node <span class="cf">for</span> node, degree <span class="kw">in</span> G.degree() <span class="cf">if</span> degree <span class="op">==</span> <span class="dv">1</span>]</span>
-<span id="cb1-124"><a href="#cb1-124" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Number of dead ends: </span><span class="sc">{</span><span class="bu">len</span>(dead_ends)<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb1-125"><a href="#cb1-125" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-126"><a href="#cb1-126" aria-hidden="true" tabindex="-1"></a>intersections <span class="op">=</span> [node <span class="cf">for</span> node, degree <span class="kw">in</span> G.degree() <span class="cf">if</span> degree <span class="op">&gt;=</span> <span class="dv">3</span>]</span>
-<span id="cb1-127"><a href="#cb1-127" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Number of intersections: </span><span class="sc">{</span><span class="bu">len</span>(intersections)<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb1-128"><a href="#cb1-128" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-129"><a href="#cb1-129" aria-hidden="true" tabindex="-1"></a>avg_degree <span class="op">=</span> <span class="bu">sum</span>(<span class="bu">dict</span>(G.degree()).values()) <span class="op">/</span> <span class="bu">max</span>(<span class="dv">1</span>, <span class="bu">len</span>(G.nodes()))</span>
-<span id="cb1-130"><a href="#cb1-130" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Average node degree: </span><span class="sc">{</span>avg_degree<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
-<span id="cb1-131"><a href="#cb1-131" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-132"><a href="#cb1-132" aria-hidden="true" tabindex="-1"></a><span class="co"># ============================================================================</span></span>
-<span id="cb1-133"><a href="#cb1-133" aria-hidden="true" tabindex="-1"></a><span class="co"># 6. VISUALIZATIONS</span></span>
-<span id="cb1-134"><a href="#cb1-134" aria-hidden="true" tabindex="-1"></a><span class="co"># ============================================================================</span></span>
-<span id="cb1-135"><a href="#cb1-135" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-136"><a href="#cb1-136" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot 1: Basic network (ox.plot_graph returns matplotlib figure, ax)</span></span>
-<span id="cb1-137"><a href="#cb1-137" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> ox.plot_graph(</span>
-<span id="cb1-138"><a href="#cb1-138" aria-hidden="true" tabindex="-1"></a>    G,</span>
-<span id="cb1-139"><a href="#cb1-139" aria-hidden="true" tabindex="-1"></a>    node_size<span class="op">=</span><span class="dv">0</span>,</span>
-<span id="cb1-140"><a href="#cb1-140" aria-hidden="true" tabindex="-1"></a>    edge_linewidth<span class="op">=</span><span class="fl">0.5</span>,</span>
-<span id="cb1-141"><a href="#cb1-141" aria-hidden="true" tabindex="-1"></a>    bgcolor<span class="op">=</span><span class="st">"white"</span>,</span>
-<span id="cb1-142"><a href="#cb1-142" aria-hidden="true" tabindex="-1"></a>    edge_color<span class="op">=</span><span class="st">"black"</span>,</span>
-<span id="cb1-143"><a href="#cb1-143" aria-hidden="true" tabindex="-1"></a>    figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">12</span>),</span>
-<span id="cb1-144"><a href="#cb1-144" aria-hidden="true" tabindex="-1"></a>    show<span class="op">=</span><span class="va">False</span>,</span>
-<span id="cb1-145"><a href="#cb1-145" aria-hidden="true" tabindex="-1"></a>    close<span class="op">=</span><span class="va">False</span>,</span>
-<span id="cb1-146"><a href="#cb1-146" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb1-147"><a href="#cb1-147" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Current Street Network"</span>, fontsize<span class="op">=</span><span class="dv">16</span>)</span>
-<span id="cb1-148"><a href="#cb1-148" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb1-149"><a href="#cb1-149" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
-<span id="cb1-150"><a href="#cb1-150" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-151"><a href="#cb1-151" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot 2: Betweenness centrality (nodes)</span></span>
-<span id="cb1-152"><a href="#cb1-152" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">12</span>))</span>
-<span id="cb1-153"><a href="#cb1-153" aria-hidden="true" tabindex="-1"></a>nodes_gdf.plot(</span>
-<span id="cb1-154"><a href="#cb1-154" aria-hidden="true" tabindex="-1"></a>    column<span class="op">=</span><span class="st">"betweenness"</span>,</span>
-<span id="cb1-155"><a href="#cb1-155" aria-hidden="true" tabindex="-1"></a>    ax<span class="op">=</span>ax,</span>
-<span id="cb1-156"><a href="#cb1-156" aria-hidden="true" tabindex="-1"></a>    cmap<span class="op">=</span><span class="st">"Reds"</span>,</span>
-<span id="cb1-157"><a href="#cb1-157" aria-hidden="true" tabindex="-1"></a>    markersize<span class="op">=</span><span class="dv">20</span>,</span>
-<span id="cb1-158"><a href="#cb1-158" aria-hidden="true" tabindex="-1"></a>    legend<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb1-159"><a href="#cb1-159" aria-hidden="true" tabindex="-1"></a>    legend_kwds<span class="op">=</span>{<span class="st">"label"</span>: <span class="st">"Betweenness Centrality"</span>},</span>
-<span id="cb1-160"><a href="#cb1-160" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb1-161"><a href="#cb1-161" aria-hidden="true" tabindex="-1"></a>edges_gdf.plot(ax<span class="op">=</span>ax, color<span class="op">=</span><span class="st">"gray"</span>, linewidth<span class="op">=</span><span class="fl">0.5</span>, alpha<span class="op">=</span><span class="fl">0.5</span>)</span>
-<span id="cb1-162"><a href="#cb1-162" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Node Betweenness Centrality</span><span class="ch">\n</span><span class="st">(Red = Important Connectors)"</span>, fontsize<span class="op">=</span><span class="dv">14</span>)</span>
-<span id="cb1-163"><a href="#cb1-163" aria-hidden="true" tabindex="-1"></a>plt.axis(<span class="st">"off"</span>)</span>
-<span id="cb1-164"><a href="#cb1-164" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb1-165"><a href="#cb1-165" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
-<span id="cb1-166"><a href="#cb1-166" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-167"><a href="#cb1-167" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot 3: Closeness centrality (nodes)</span></span>
-<span id="cb1-168"><a href="#cb1-168" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">12</span>))</span>
-<span id="cb1-169"><a href="#cb1-169" aria-hidden="true" tabindex="-1"></a>nodes_gdf.plot(</span>
-<span id="cb1-170"><a href="#cb1-170" aria-hidden="true" tabindex="-1"></a>    column<span class="op">=</span><span class="st">"closeness"</span>,</span>
-<span id="cb1-171"><a href="#cb1-171" aria-hidden="true" tabindex="-1"></a>    ax<span class="op">=</span>ax,</span>
-<span id="cb1-172"><a href="#cb1-172" aria-hidden="true" tabindex="-1"></a>    cmap<span class="op">=</span><span class="st">"Blues"</span>,</span>
-<span id="cb1-173"><a href="#cb1-173" aria-hidden="true" tabindex="-1"></a>    markersize<span class="op">=</span><span class="dv">20</span>,</span>
-<span id="cb1-174"><a href="#cb1-174" aria-hidden="true" tabindex="-1"></a>    legend<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb1-175"><a href="#cb1-175" aria-hidden="true" tabindex="-1"></a>    legend_kwds<span class="op">=</span>{<span class="st">"label"</span>: <span class="st">"Closeness Centrality"</span>},</span>
-<span id="cb1-176"><a href="#cb1-176" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb1-177"><a href="#cb1-177" aria-hidden="true" tabindex="-1"></a>edges_gdf.plot(ax<span class="op">=</span>ax, color<span class="op">=</span><span class="st">"gray"</span>, linewidth<span class="op">=</span><span class="fl">0.5</span>, alpha<span class="op">=</span><span class="fl">0.5</span>)</span>
-<span id="cb1-178"><a href="#cb1-178" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Node Closeness Centrality</span><span class="ch">\n</span><span class="st">(Blue = Most Accessible)"</span>, fontsize<span class="op">=</span><span class="dv">14</span>)</span>
-<span id="cb1-179"><a href="#cb1-179" aria-hidden="true" tabindex="-1"></a>plt.axis(<span class="st">"off"</span>)</span>
-<span id="cb1-180"><a href="#cb1-180" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb1-181"><a href="#cb1-181" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
-<span id="cb1-182"><a href="#cb1-182" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-183"><a href="#cb1-183" aria-hidden="true" tabindex="-1"></a><span class="co"># ============================================================================</span></span>
-<span id="cb1-184"><a href="#cb1-184" aria-hidden="true" tabindex="-1"></a><span class="co"># 7. CLEAN GEOMETRIES + FLATTEN ATTRIBUTES BEFORE EXPORT</span></span>
-<span id="cb1-185"><a href="#cb1-185" aria-hidden="true" tabindex="-1"></a><span class="co"># ============================================================================</span></span>
-<span id="cb1-186"><a href="#cb1-186" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-187"><a href="#cb1-187" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Cleaning geometries and attributes for export..."</span>)</span>
-<span id="cb1-188"><a href="#cb1-188" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-189"><a href="#cb1-189" aria-hidden="true" tabindex="-1"></a><span class="co"># 1) Remove NaN geometries</span></span>
-<span id="cb1-190"><a href="#cb1-190" aria-hidden="true" tabindex="-1"></a>edges_gdf <span class="op">=</span> edges_gdf[edges_gdf.geometry.notna()].copy()</span>
-<span id="cb1-191"><a href="#cb1-191" aria-hidden="true" tabindex="-1"></a>nodes_gdf <span class="op">=</span> nodes_gdf[nodes_gdf.geometry.notna()].copy()</span>
-<span id="cb1-192"><a href="#cb1-192" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-193"><a href="#cb1-193" aria-hidden="true" tabindex="-1"></a><span class="co"># 2) Attempt to fix invalid geometries using buffer(0)</span></span>
-<span id="cb1-194"><a href="#cb1-194" aria-hidden="true" tabindex="-1"></a>edges_gdf[<span class="st">"geometry"</span>] <span class="op">=</span> edges_gdf[<span class="st">"geometry"</span>].<span class="bu">apply</span>(safe_buffer_zero)</span>
-<span id="cb1-195"><a href="#cb1-195" aria-hidden="true" tabindex="-1"></a>nodes_gdf[<span class="st">"geometry"</span>] <span class="op">=</span> nodes_gdf[<span class="st">"geometry"</span>].<span class="bu">apply</span>(safe_buffer_zero)</span>
-<span id="cb1-196"><a href="#cb1-196" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-197"><a href="#cb1-197" aria-hidden="true" tabindex="-1"></a><span class="co"># Optionally drop any empty geometries that couldn't be fixed</span></span>
-<span id="cb1-198"><a href="#cb1-198" aria-hidden="true" tabindex="-1"></a>edges_gdf <span class="op">=</span> edges_gdf[<span class="op">~</span>edges_gdf.geometry.is_empty].copy()</span>
-<span id="cb1-199"><a href="#cb1-199" aria-hidden="true" tabindex="-1"></a>nodes_gdf <span class="op">=</span> nodes_gdf[<span class="op">~</span>nodes_gdf.geometry.is_empty].copy()</span>
-<span id="cb1-200"><a href="#cb1-200" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-201"><a href="#cb1-201" aria-hidden="true" tabindex="-1"></a><span class="co"># 3) Flatten list/dict-like columns to strings (GeoJSON can't store Python lists)</span></span>
-<span id="cb1-202"><a href="#cb1-202" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> gdf <span class="kw">in</span> (nodes_gdf, edges_gdf):</span>
-<span id="cb1-203"><a href="#cb1-203" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> col <span class="kw">in</span> gdf.columns:</span>
-<span id="cb1-204"><a href="#cb1-204" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> col <span class="op">==</span> <span class="st">"geometry"</span>:</span>
-<span id="cb1-205"><a href="#cb1-205" aria-hidden="true" tabindex="-1"></a>            <span class="cf">continue</span></span>
-<span id="cb1-206"><a href="#cb1-206" aria-hidden="true" tabindex="-1"></a>        <span class="co"># apply flattening with a safe conversion</span></span>
-<span id="cb1-207"><a href="#cb1-207" aria-hidden="true" tabindex="-1"></a>        <span class="cf">try</span>:</span>
-<span id="cb1-208"><a href="#cb1-208" aria-hidden="true" tabindex="-1"></a>            gdf[col] <span class="op">=</span> gdf[col].<span class="bu">apply</span>(flatten_value_for_geojson)</span>
-<span id="cb1-209"><a href="#cb1-209" aria-hidden="true" tabindex="-1"></a>        <span class="cf">except</span> <span class="pp">Exception</span>:</span>
-<span id="cb1-210"><a href="#cb1-210" aria-hidden="true" tabindex="-1"></a>            <span class="co"># fallback: convert whole column to string</span></span>
-<span id="cb1-211"><a href="#cb1-211" aria-hidden="true" tabindex="-1"></a>            gdf[col] <span class="op">=</span> gdf[col].astype(<span class="bu">str</span>).where(<span class="op">~</span>gdf[col].isna(), <span class="va">None</span>)</span>
-<span id="cb1-212"><a href="#cb1-212" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-213"><a href="#cb1-213" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Geometry + attribute cleaning complete!"</span>)</span>
-<span id="cb1-214"><a href="#cb1-214" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-215"><a href="#cb1-215" aria-hidden="true" tabindex="-1"></a><span class="co"># ============================================================================</span></span>
-<span id="cb1-216"><a href="#cb1-216" aria-hidden="true" tabindex="-1"></a><span class="co"># 8. EXPORT FOR FURTHER ANALYSIS</span></span>
-<span id="cb1-217"><a href="#cb1-217" aria-hidden="true" tabindex="-1"></a><span class="co"># ============================================================================</span></span>
-<span id="cb1-218"><a href="#cb1-218" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-219"><a href="#cb1-219" aria-hidden="true" tabindex="-1"></a><span class="co"># Save to GeoJSON files</span></span>
-<span id="cb1-220"><a href="#cb1-220" aria-hidden="true" tabindex="-1"></a><span class="co"># If you prefer shapefile, note shapefile has stricter type limits and field name length limits.</span></span>
-<span id="cb1-221"><a href="#cb1-221" aria-hidden="true" tabindex="-1"></a>nodes_gdf.to_file(<span class="st">"current_network_nodes.geojson"</span>, driver<span class="op">=</span><span class="st">"GeoJSON"</span>)</span>
-<span id="cb1-222"><a href="#cb1-222" aria-hidden="true" tabindex="-1"></a>edges_gdf.to_file(<span class="st">"current_network_edges.geojson"</span>, driver<span class="op">=</span><span class="st">"GeoJSON"</span>)</span>
-<span id="cb1-223"><a href="#cb1-223" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-224"><a href="#cb1-224" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">=== Files saved successfully ==="</span>)</span>
-<span id="cb1-225"><a href="#cb1-225" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"- current_network_nodes.geojson"</span>)</span>
-<span id="cb1-226"><a href="#cb1-226" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"- current_network_edges.geojson"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Setup</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> geopandas <span class="im">as</span> gpd</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> shapely.geometry <span class="im">import</span> Point, LineString, MultiPoint</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> shapely.ops <span class="im">import</span> unary_union, split</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> shapely.geometry <span class="im">import</span> box</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> osmnx <span class="im">as</span> ox</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> networkx <span class="im">as</span> nx</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div id="31d4a37568c499d5" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-13T02:43:10.514386Z&quot;,&quot;start_time&quot;:&quot;2025-12-13T02:43:10.127757Z&quot;}}" data-execution_count="24">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Loading historical streets..."</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>historical <span class="op">=</span> gpd.read_file(<span class="st">'../data/streets/cincinnati_kenyon_barr_streets.geojson'</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> historical.crs <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    historical <span class="op">=</span> historical.set_crs(<span class="st">'EPSG:4326'</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Finding intersection points..."</span>)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>intersections <span class="op">=</span> []</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, street1 <span class="kw">in</span> historical.iterrows():</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j, street2 <span class="kw">in</span> historical.iterrows():</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> i <span class="op">&gt;=</span> j:</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>            <span class="cf">continue</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> street1.geometry.intersects(street2.geometry):</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>            intersection <span class="op">=</span> street1.geometry.intersection(street2.geometry)</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> intersection.geom_type <span class="op">==</span> <span class="st">'Point'</span>:</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>                intersections.append(intersection)</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>            <span class="cf">elif</span> intersection.geom_type <span class="op">==</span> <span class="st">'MultiPoint'</span>:</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>                intersections.extend(<span class="bu">list</span>(intersection.geoms))</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>            <span class="cf">elif</span> intersection.geom_type <span class="op">==</span> <span class="st">'LineString'</span>:</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>                coords <span class="op">=</span> <span class="bu">list</span>(intersection.coords)</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>                intersections.append(Point(coords[<span class="dv">0</span>]))</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>                intersections.append(Point(coords[<span class="op">-</span><span class="dv">1</span>]))</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Adding street endpoints..."</span>)</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>endpoints <span class="op">=</span> []</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> idx, street <span class="kw">in</span> historical.iterrows():</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>    coords <span class="op">=</span> <span class="bu">list</span>(street.geometry.coords)</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>    endpoints.append(Point(coords[<span class="dv">0</span>]))   <span class="co"># Start point</span></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>    endpoints.append(Point(coords[<span class="op">-</span><span class="dv">1</span>]))  <span class="co"># End point</span></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>all_nodes <span class="op">=</span> intersections <span class="op">+</span> endpoints</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Removing duplicate nodes..."</span>)</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>nodes_gdf <span class="op">=</span> gpd.GeoDataFrame(geometry<span class="op">=</span>all_nodes, crs<span class="op">=</span><span class="st">'EPSG:4326'</span>)</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>tolerance <span class="op">=</span> <span class="fl">0.00001</span>  <span class="co"># approximately 1 meter</span></span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>unique_nodes <span class="op">=</span> []</span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>used <span class="op">=</span> <span class="bu">set</span>()</span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, node1 <span class="kw">in</span> nodes_gdf.iterrows():</span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> i <span class="kw">in</span> used:</span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>        <span class="cf">continue</span></span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>    nearby <span class="op">=</span> nodes_gdf[nodes_gdf.distance(node1.geometry) <span class="op">&lt;</span> tolerance]</span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">len</span>(nearby) <span class="op">&gt;</span> <span class="dv">1</span>:</span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>        centroid <span class="op">=</span> MultiPoint(<span class="bu">list</span>(nearby.geometry)).centroid</span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>        unique_nodes.append(centroid)</span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>        unique_nodes.append(node1.geometry)</span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>    used.update(nearby.index)</span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>nodes_final <span class="op">=</span> gpd.GeoDataFrame(</span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>    {<span class="st">'node_id'</span>: <span class="bu">range</span>(<span class="bu">len</span>(unique_nodes))},</span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>    geometry<span class="op">=</span>unique_nodes,</span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>    crs<span class="op">=</span><span class="st">'EPSG:4326'</span></span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>nodes_final[<span class="st">'x'</span>] <span class="op">=</span> nodes_final.geometry.x</span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a>nodes_final[<span class="st">'y'</span>] <span class="op">=</span> nodes_final.geometry.y</span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>nodes_final.to_file(<span class="st">'../data/streets/historical_intersection_nodes.geojson'</span>, driver<span class="op">=</span><span class="st">'GeoJSON'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>Study area bounds:
-  North: 39.120322, South: 39.097413
-  East: -84.512108, West: -84.540747
-  Area: ~2.54 km × 2.47 km
+<pre><code>Loading historical streets...
 
-Downloading current street network from OpenStreetMap...
-This may take a minute...</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Network has 618 nodes and 1369 edges
+Finding intersection points...
 
-Nodes columns: ['y', 'x', 'ref', 'highway', 'street_count', 'geometry']
-Edges columns: ['osmid', 'oneway', 'lanes', 'highway', 'reversed', 'length', 'geometry', 'ref', 'name', 'maxspeed', 'bridge', 'access', 'area', 'tunnel', 'junction']
+Adding street endpoints...
 
-Total street length: 144.03 km
-
-=== Basic Network Statistics ===
-n: 618
-m: 1369
-k_avg: 4.4304
-edge_length_total: 144030.3630
-edge_length_avg: 105.2084
-streets_per_node_avg: 3.1586
-streets_per_node_counts: dict
-streets_per_node_proportions: dict
-intersection_count: 573
-street_length_total: 103022.5250
-street_segment_count: 945
-street_length_avg: 109.0185
-circuity_avg: 1.0197
-self_loop_proportion: 0.0011
-
-=== Calculating Centrality Metrics ===
-Note: for MultiDiGraph we aggregate to a simple undirected graph for centrality calculations.
-Calculating betweenness centrality (this can be slow for bigger graphs)...
-Calculating closeness centrality...
-Centrality calculations complete!
-
-Number of dead ends: 4
-Number of intersections: 551
-Average node degree: 4.43</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="osmnx-exploration_files/figure-html/cell-2-output-3.png" class="img-fluid figure-img"></p>
-</figure>
+Removing duplicate nodes...</code></pre>
 </div>
 </div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="osmnx-exploration_files/figure-html/cell-2-output-4.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="osmnx-exploration_files/figure-html/cell-2-output-5.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Cleaning geometries and attributes for export...
-Geometry + attribute cleaning complete!
-
-=== Files saved successfully ===
-- current_network_nodes.geojson
-- current_network_edges.geojson</code></pre>
-</div>
-</div>
-<div id="initial_id" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-12T02:49:26.855761Z&quot;,&quot;start_time&quot;:&quot;2025-12-12T02:49:26.340425Z&quot;}}" data-execution_count="16">
+<div id="c76e6ff7b387ddac" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-13T02:43:13.524039Z&quot;,&quot;start_time&quot;:&quot;2025-12-13T02:43:12.941555Z&quot;}}" data-execution_count="25">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ============================================================================</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 9. (OPTIONAL) COMPARE WITH MISSING STREETS - Uncomment and edit path</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ============================================================================</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">=== Comparing with Historical Network ==="</span>)</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>missing_streets <span class="op">=</span> gpd.read_file(<span class="st">"../data/streets/cincinnati_kenyon_barr_streets.geojson"</span>)</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> missing_streets.crs <span class="op">!=</span> edges_gdf.crs:</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    missing_streets <span class="op">=</span> missing_streets.to_crs(edges_gdf.crs)</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Project to UTM zone 17N (meters)</span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>edges_m <span class="op">=</span> edges_gdf.to_crs(<span class="dv">26917</span>)</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>missing_m <span class="op">=</span> missing_streets.to_crs(<span class="dv">26917</span>)</span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>missing_length <span class="op">=</span> missing_m.geometry.length.<span class="bu">sum</span>()</span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>current_length <span class="op">=</span> edges_m.geometry.length.<span class="bu">sum</span>()</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">14</span>, <span class="dv">14</span>))</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot streets</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>historical.plot(ax<span class="op">=</span>ax, color<span class="op">=</span><span class="st">'#E63946'</span>, linewidth<span class="op">=</span><span class="dv">2</span>, alpha<span class="op">=</span><span class="fl">0.7</span>, label<span class="op">=</span><span class="st">'Streets'</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot intersection nodes</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>nodes_final.plot(ax<span class="op">=</span>ax, color<span class="op">=</span><span class="st">'#2E86AB'</span>, markersize<span class="op">=</span><span class="dv">50</span>, alpha<span class="op">=</span><span class="fl">0.8</span>,</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>                 label<span class="op">=</span><span class="st">'Intersections'</span>, zorder<span class="op">=</span><span class="dv">5</span>)</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">'Historical Street Network with Intersection Nodes'</span>,</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>             fontsize<span class="op">=</span><span class="dv">16</span>, fontweight<span class="op">=</span><span class="st">'bold'</span>, pad<span class="op">=</span><span class="dv">20</span>)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>ax.legend(fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>ax.axis(<span class="st">'off'</span>)</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>plt.savefig(<span class="st">'osmnx-output/historical_network_with_nodes.png'</span>,</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>            dpi<span class="op">=</span><span class="dv">300</span>, bbox_inches<span class="op">=</span><span class="st">'tight'</span>, facecolor<span class="op">=</span><span class="st">'white'</span>)</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="osmnx-exploration_files/figure-html/cell-4-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="8cb066baafe101f2" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-13T02:43:58.765788Z&quot;,&quot;start_time&quot;:&quot;2025-12-13T02:43:57.778960Z&quot;}}" data-execution_count="29">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>historical <span class="op">=</span> gpd.read_file(<span class="st">'../data/streets/cincinnati_kenyon_barr_streets.geojson'</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>historical_nodes <span class="op">=</span> gpd.read_file(<span class="st">'../data/streets/historical_intersection_nodes.geojson'</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> historical.crs <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    historical <span class="op">=</span> historical.set_crs(<span class="st">'EPSG:4326'</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> historical_nodes.crs <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    historical_nodes <span class="op">=</span> historical_nodes.set_crs(<span class="st">'EPSG:4326'</span>)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>historical <span class="op">=</span> historical[<span class="op">~</span>historical.geometry.isna()].copy()</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>historical <span class="op">=</span> historical[<span class="op">~</span>historical.is_empty].copy()</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>historical <span class="op">=</span> historical[historical.is_valid].copy()</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>north <span class="op">=</span> <span class="fl">39.1080</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>south <span class="op">=</span> <span class="fl">39.1003</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>east <span class="op">=</span> <span class="op">-</span><span class="fl">84.5200</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>west <span class="op">=</span> <span class="op">-</span><span class="fl">84.5380</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>bbox <span class="op">=</span> box(west, south, east, north)</span>
 <span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Current street network: </span><span class="sc">{</span>current_length<span class="sc">:.0f}</span><span class="ss"> meters"</span>)</span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Historical streets: </span><span class="sc">{</span>missing_length<span class="sc">:.0f}</span><span class="ss"> meters"</span>)</span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Historical network was </span><span class="sc">{</span>(missing_length<span class="op">/</span>current_length)<span class="op">*</span><span class="dv">100</span><span class="sc">:.1f}</span><span class="ss">% longer"</span>)</span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>fig, (ax1, ax2) <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">20</span>, <span class="dv">10</span>))</span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>edges_gdf.plot(ax<span class="op">=</span>ax1, color<span class="op">=</span><span class="st">'blue'</span>, linewidth<span class="op">=</span><span class="dv">1</span>, alpha<span class="op">=</span><span class="fl">0.7</span>)</span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>ax1.set_title(<span class="st">'Current Street Network'</span>, fontsize<span class="op">=</span><span class="dv">16</span>)</span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>ax1.axis(<span class="st">'off'</span>)</span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>edges_gdf.plot(ax<span class="op">=</span>ax2, color<span class="op">=</span><span class="st">'blue'</span>, linewidth<span class="op">=</span><span class="dv">1</span>, alpha<span class="op">=</span><span class="fl">0.7</span>, label<span class="op">=</span><span class="st">'Current'</span>)</span>
-<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>missing_streets.plot(ax<span class="op">=</span>ax2, color<span class="op">=</span><span class="st">'red'</span>, linewidth<span class="op">=</span><span class="dv">2</span>, alpha<span class="op">=</span><span class="fl">0.7</span>, label<span class="op">=</span><span class="st">'Historical'</span>)</span>
-<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>ax2.set_title(<span class="st">'Current vs Historical Streets'</span>, fontsize<span class="op">=</span><span class="dv">16</span>)</span>
-<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>ax2.legend()</span>
-<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>ax2.axis(<span class="st">'off'</span>)</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>original_count <span class="op">=</span> <span class="bu">len</span>(historical)</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>historical <span class="op">=</span> historical[historical.intersects(bbox)].copy()</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>historical[<span class="st">'geometry'</span>] <span class="op">=</span> historical.geometry.intersection(bbox)</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>historical <span class="op">=</span> historical[<span class="op">~</span>historical.is_empty].copy()</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>historical_nodes <span class="op">=</span> historical_nodes[historical_nodes.intersects(bbox)].copy()</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span>:</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>    current_graph <span class="op">=</span> ox.graph_from_bbox(north, south, east, west, network_type<span class="op">=</span><span class="st">'drive'</span>)</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a><span class="cf">except</span> <span class="pp">Exception</span> <span class="im">as</span> e:</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>    <span class="cf">raise</span></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>current_nodes, current_edges <span class="op">=</span> ox.graph_to_gdfs(current_graph)</span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>fig, (ax1, ax2, ax3) <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">3</span>, figsize<span class="op">=</span>(<span class="dv">24</span>, <span class="dv">8</span>))</span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>historical.plot(ax<span class="op">=</span>ax1, color<span class="op">=</span><span class="st">'#E63946'</span>, linewidth<span class="op">=</span><span class="dv">2</span>, alpha<span class="op">=</span><span class="fl">0.8</span>)</span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>historical_nodes.plot(ax<span class="op">=</span>ax1, color<span class="op">=</span><span class="st">'#8B0000'</span>, markersize<span class="op">=</span><span class="dv">30</span>, alpha<span class="op">=</span><span class="fl">0.9</span>, zorder<span class="op">=</span><span class="dv">5</span>)</span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>ax1.set_title(<span class="st">'Historical Street Network</span><span class="ch">\n</span><span class="st">(Pre-Urban Renewal, ~1950)'</span>,</span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>              fontsize<span class="op">=</span><span class="dv">14</span>, fontweight<span class="op">=</span><span class="st">'bold'</span>, pad<span class="op">=</span><span class="dv">15</span>)</span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>ax1.axis(<span class="st">'off'</span>)</span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>ax1.text(<span class="fl">0.02</span>, <span class="fl">0.98</span>, <span class="ss">f'</span><span class="sc">{</span><span class="bu">len</span>(historical)<span class="sc">}</span><span class="ss"> segments</span><span class="ch">\n</span><span class="sc">{</span><span class="bu">len</span>(historical_nodes)<span class="sc">}</span><span class="ss"> intersections'</span>,</span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>         transform<span class="op">=</span>ax1.transAxes, fontsize<span class="op">=</span><span class="dv">11</span>, verticalalignment<span class="op">=</span><span class="st">'top'</span>,</span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>         bbox<span class="op">=</span><span class="bu">dict</span>(boxstyle<span class="op">=</span><span class="st">'round'</span>, facecolor<span class="op">=</span><span class="st">'white'</span>, alpha<span class="op">=</span><span class="fl">0.9</span>, edgecolor<span class="op">=</span><span class="st">'gray'</span>))</span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>current_edges.plot(ax<span class="op">=</span>ax2, color<span class="op">=</span><span class="st">'#2E86AB'</span>, linewidth<span class="op">=</span><span class="dv">2</span>, alpha<span class="op">=</span><span class="fl">0.8</span>)</span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>current_nodes.plot(ax<span class="op">=</span>ax2, color<span class="op">=</span><span class="st">'#003D5B'</span>, markersize<span class="op">=</span><span class="dv">30</span>, alpha<span class="op">=</span><span class="fl">0.9</span>, zorder<span class="op">=</span><span class="dv">5</span>)</span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a>ax2.set_title(<span class="st">'Current Street Network</span><span class="ch">\n</span><span class="st">(Post-Urban Renewal, 2024)'</span>,</span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a>              fontsize<span class="op">=</span><span class="dv">14</span>, fontweight<span class="op">=</span><span class="st">'bold'</span>, pad<span class="op">=</span><span class="dv">15</span>)</span>
+<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a>ax2.axis(<span class="st">'off'</span>)</span>
+<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a>ax2.text(<span class="fl">0.02</span>, <span class="fl">0.98</span>, <span class="ss">f'</span><span class="sc">{</span><span class="bu">len</span>(current_edges)<span class="sc">}</span><span class="ss"> segments</span><span class="ch">\n</span><span class="sc">{</span><span class="bu">len</span>(current_nodes)<span class="sc">}</span><span class="ss"> intersections'</span>,</span>
+<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a>         transform<span class="op">=</span>ax2.transAxes, fontsize<span class="op">=</span><span class="dv">11</span>, verticalalignment<span class="op">=</span><span class="st">'top'</span>,</span>
+<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a>         bbox<span class="op">=</span><span class="bu">dict</span>(boxstyle<span class="op">=</span><span class="st">'round'</span>, facecolor<span class="op">=</span><span class="st">'white'</span>, alpha<span class="op">=</span><span class="fl">0.9</span>, edgecolor<span class="op">=</span><span class="st">'gray'</span>))</span>
+<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a>current_edges.plot(ax<span class="op">=</span>ax3, color<span class="op">=</span><span class="st">'#2E86AB'</span>, linewidth<span class="op">=</span><span class="fl">1.5</span>, alpha<span class="op">=</span><span class="fl">0.6</span>, label<span class="op">=</span><span class="st">'Current streets'</span>)</span>
+<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a>current_nodes.plot(ax<span class="op">=</span>ax3, color<span class="op">=</span><span class="st">'#003D5B'</span>, markersize<span class="op">=</span><span class="dv">20</span>, alpha<span class="op">=</span><span class="fl">0.6</span>, zorder<span class="op">=</span><span class="dv">4</span>)</span>
+<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a>historical.plot(ax<span class="op">=</span>ax3, color<span class="op">=</span><span class="st">'#E63946'</span>, linewidth<span class="op">=</span><span class="dv">2</span>, alpha<span class="op">=</span><span class="fl">0.8</span>, label<span class="op">=</span><span class="st">'Historical streets'</span>)</span>
+<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a>historical_nodes.plot(ax<span class="op">=</span>ax3, color<span class="op">=</span><span class="st">'#8B0000'</span>, markersize<span class="op">=</span><span class="dv">20</span>, alpha<span class="op">=</span><span class="fl">0.9</span>, zorder<span class="op">=</span><span class="dv">5</span>)</span>
+<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a>ax3.set_title(<span class="st">'Overlay: Lost Connectivity</span><span class="ch">\n</span><span class="st">(Red shows historical streets, many now gone)'</span>,</span>
+<span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a>              fontsize<span class="op">=</span><span class="dv">14</span>, fontweight<span class="op">=</span><span class="st">'bold'</span>, pad<span class="op">=</span><span class="dv">15</span>)</span>
+<span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a>ax3.legend(loc<span class="op">=</span><span class="st">'upper right'</span>, fontsize<span class="op">=</span><span class="dv">11</span>, framealpha<span class="op">=</span><span class="fl">0.95</span>)</span>
+<span id="cb5-59"><a href="#cb5-59" aria-hidden="true" tabindex="-1"></a>ax3.axis(<span class="st">'off'</span>)</span>
+<span id="cb5-60"><a href="#cb5-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-61"><a href="#cb5-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-62"><a href="#cb5-62" aria-hidden="true" tabindex="-1"></a>plt.suptitle(<span class="st">'Cincinnati West End Street Network: Urban Renewal Impact'</span>,</span>
+<span id="cb5-63"><a href="#cb5-63" aria-hidden="true" tabindex="-1"></a>             fontsize<span class="op">=</span><span class="dv">17</span>, fontweight<span class="op">=</span><span class="st">'bold'</span>, y<span class="op">=</span><span class="fl">0.98</span>)</span>
+<span id="cb5-64"><a href="#cb5-64" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb5-65"><a href="#cb5-65" aria-hidden="true" tabindex="-1"></a>plt.savefig(<span class="st">'osmnx-output/street_network_comparison.png'</span>, dpi<span class="op">=</span><span class="dv">300</span>, bbox_inches<span class="op">=</span><span class="st">'tight'</span>, facecolor<span class="op">=</span><span class="st">'white'</span>)</span>
+<span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-=== Comparing with Historical Network ===
-Current street network: 144225 meters
-Historical streets: 24272 meters
-Historical network was 16.8% longer</code></pre>
-</div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="osmnx-exploration_files/figure-html/cell-3-output-2.png" class="img-fluid figure-img"></p>
+<p><img src="osmnx-exploration_files/figure-html/cell-5-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
+<div id="d15ca53059d9bfe9" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-13T02:44:21.997730Z&quot;,&quot;start_time&quot;:&quot;2025-12-13T02:44:21.926796Z&quot;}}" data-execution_count="31">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>G_historical <span class="op">=</span> nx.Graph()</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> idx, node <span class="kw">in</span> historical_nodes.iterrows():</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    G_historical.add_node(idx, pos<span class="op">=</span>(node.geometry.x, node.geometry.y))</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>tolerance <span class="op">=</span> <span class="fl">0.0001</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> idx, street <span class="kw">in</span> historical.iterrows():</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    connected_nodes <span class="op">=</span> []</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> node_idx, node <span class="kw">in</span> historical_nodes.iterrows():</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> street.geometry.distance(node.geometry) <span class="op">&lt;</span> tolerance:</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>            connected_nodes.append(node_idx)</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">len</span>(connected_nodes) <span class="op">&gt;=</span> <span class="dv">2</span>:</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(connected_nodes) <span class="op">-</span> <span class="dv">1</span>):</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>            G_historical.add_edge(connected_nodes[i], connected_nodes[i<span class="op">+</span><span class="dv">1</span>])</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Historical: </span><span class="sc">{</span>G_historical<span class="sc">.</span>number_of_nodes()<span class="sc">}</span><span class="ss"> nodes, </span><span class="sc">{</span>G_historical<span class="sc">.</span>number_of_edges()<span class="sc">}</span><span class="ss"> edges"</span>)</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Current: </span><span class="sc">{</span>current_graph<span class="sc">.</span>number_of_nodes()<span class="sc">}</span><span class="ss"> nodes, </span><span class="sc">{</span>current_graph<span class="sc">.</span>number_of_edges()<span class="sc">}</span><span class="ss"> edges"</span>)</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>lost_intersections <span class="op">=</span> <span class="bu">len</span>(historical_nodes) <span class="op">-</span> <span class="bu">len</span>(current_nodes)</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>lost_pct <span class="op">=</span> (lost_intersections <span class="op">/</span> <span class="bu">len</span>(historical_nodes)) <span class="op">*</span> <span class="dv">100</span></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>hist_density <span class="op">=</span> nx.density(G_historical)</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>curr_density <span class="op">=</span> nx.density(current_graph)</span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>density_change_pct <span class="op">=</span> ((curr_density <span class="op">-</span> hist_density) <span class="op">/</span> hist_density) <span class="op">*</span> <span class="dv">100</span></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>results_df <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Metric'</span>: [<span class="st">'Intersections'</span>, <span class="st">'Network Density'</span>],</span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Historical'</span>: [<span class="bu">len</span>(historical_nodes), <span class="ss">f'</span><span class="sc">{</span>hist_density<span class="sc">:.3f}</span><span class="ss">'</span>],</span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Current'</span>: [<span class="bu">len</span>(current_nodes), <span class="ss">f'</span><span class="sc">{</span>curr_density<span class="sc">:.3f}</span><span class="ss">'</span>],</span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Change'</span>: [<span class="ss">f'</span><span class="sc">{</span>lost_intersections<span class="sc">}</span><span class="ss"> (</span><span class="sc">{</span>lost_pct<span class="sc">:.0f}</span><span class="ss">%)'</span>, <span class="ss">f'</span><span class="sc">{</span>density_change_pct<span class="sc">:.0f}</span><span class="ss">%'</span>]</span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">"</span>)</span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(results_df.to_string(index<span class="op">=</span><span class="va">False</span>))</span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">"</span> <span class="op">+</span> <span class="st">"="</span><span class="op">*</span><span class="dv">70</span>)</span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"osmnx-output/networkx.html"</span>, <span class="st">"w"</span>) <span class="im">as</span> f:</span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a>    f.write(results_df.to_html())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Historical: 87 nodes, 143 edges
+Current: 143 nodes, 273 edges
 
 
+         Metric Historical Current     Change
+  Intersections         87     143 -56 (-64%)
+Network Density      0.038   0.013       -65%
+
+======================================================================</code></pre>
+</div>
+</div>
+
+
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
